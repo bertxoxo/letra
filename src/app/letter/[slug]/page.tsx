@@ -1,4 +1,4 @@
-﻿import { notFound } from "next/navigation";
+import { notFound } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import { PaperLetterReveal } from "@/components/letter/PaperLetterReveal";
 import { SpotifyEmbedPlayer } from "@/components/spotify/SpotifyEmbedPlayer";
@@ -38,11 +38,7 @@ export default async function LetterPage({
 
       {letter.songName && (
         <div className="mt-8 w-full">
-          <SpotifyEmbedPlayer
-            songName={letter.songName}
-            artistName={letter.artistName}
-            spotifyUrl={letter.spotifyUrl}
-          />
+          <SpotifyEmbedPlayer trackId={letter.spotifyTrackId!} />
         </div>
       )}
 

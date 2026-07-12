@@ -45,3 +45,19 @@ export interface SpotifyTrack {
   albumCover: string;
   spotifyUrl: string;
 }
+
+export interface LetterSummary {
+  id: string;
+  slug: string;
+  title: string;
+  message: string;
+  category: string;
+  recipientName: string;
+  senderName: string | null;
+  songName: string | null;
+  artistName: string | null;
+  albumCover: string | null;
+  views: number;
+  reactions: number;
+  createdAt: string;
+}
