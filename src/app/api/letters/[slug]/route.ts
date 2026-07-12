@@ -1,5 +1,6 @@
-import { NextRequest, NextResponse } from "next/server";
+﻿import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
+import { EmailService } from "@/services/EmailService";
 
 // GET /api/letters/[slug] — fetch one letter and bump its view count
 export async function GET(
@@ -18,6 +19,20 @@ export async function GET(
       },
     });
 
+    // Notify sender that their letter was viewed
+    if (letter.senderEmail) {
+      const url = `${process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000"}/letter/${letter.slug}`;
+      try {
+        await EmailService.send("letter_viewed", letter.senderEmail, {
+          recipientName: letter.recipientName,
+          url,
+        });
+        console.log("[letter_viewed] Notification sent to sender:", letter.senderEmail);
+      } catch (err) {
+        console.error("[letter_viewed] Failed to notify sender:", err);
+      }
+    }
+
     return NextResponse.json({ letter });
   } catch (error) {
     console.error("[GET /api/letters/:slug]", error);
@@ -25,8 +40,7 @@ export async function GET(
   }
 }
 
-// DELETE /api/letters/[slug] — remove a letter (author-only, auth check TODO
-// once magic-link session is wired up in /lib/auth.ts)
+// DELETE /api/letters/[slug] — remove a letter
 export async function DELETE(
   _req: NextRequest,
   { params }: { params: { slug: string } }
