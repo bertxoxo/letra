@@ -12,7 +12,7 @@ const features = [
   },
   {
     title: "Send it anywhere",
-    body: "Share a link, or let them find it — every message gets its own page.",
+    body: "Share a link, or let them find it Ã¢â‚¬â€ every message gets its own page.",
   },
 ];
 
@@ -20,7 +20,7 @@ export function Hero() {
   return (
     <section className="mx-auto max-w-5xl px-6 pb-16 pt-14 text-center">
       <h1 className="font-handwritten text-5xl leading-tight text-ink sm:text-6xl">
-        Say it with a song.
+        Express it with a song
       </h1>
       <p className="mx-auto mt-4 max-w-lg text-[16px] text-slate-muted">
         Write a message, attach the song that fits, and send it to someone who
