@@ -30,6 +30,7 @@ export type CreateLetterInput = z.infer<typeof createLetterSchema>;
 export const createReplySchema = z.object({
   letterId: z.string().min(1),
   message: z.string().min(1).max(1000),
+  authorRole: z.enum(["SENDER", "RECIPIENT"]),
 });
 
 export type CreateReplyInput = z.infer<typeof createReplySchema>;

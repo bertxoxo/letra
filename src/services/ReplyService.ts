@@ -19,6 +19,7 @@ export const ReplyService = {
         data: {
           letterId: data.letterId,
           message: data.message,
+          authorRole: data.authorRole,
         },
       }),
       prisma.letter.update({
