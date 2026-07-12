@@ -1,0 +1,1 @@
+export const MAX_REPLIES_PER_SIDE = 5;

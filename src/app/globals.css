@@ -1,0 +1,50 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-paper text-ink font-body antialiased;
+  }
+
+  ::selection {
+    background-color: #1c1c1c;
+    color: #fefefc;
+  }
+
+  /* Respect reduced-motion preference: kill the fall-in animation */
+  @media (prefers-reduced-motion: reduce) {
+    * {
+      animation-duration: 0.001ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.001ms !important;
+    }
+  }
+
+  /* Visible keyboard focus ring everywhere */
+  :focus-visible {
+    outline: 2px solid #1c1c1c;
+    outline-offset: 2px;
+    border-radius: 4px;
+  }
+}
+
+@layer components {
+  .input {
+    @apply w-full rounded-card border border-hairline bg-paper px-4 py-2.5 font-body text-sm text-ink placeholder:text-muted/70 focus:border-ink;
+  }
+}
+
+@layer utilities {
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+}
