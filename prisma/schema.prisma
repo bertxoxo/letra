@@ -1,13 +1,11 @@
 generator client {
   provider = "prisma-client-js"
 }
-
 datasource db {
   provider  = "postgresql"
   url       = env("DATABASE_URL")
   directUrl = env("DIRECT_URL")
 }
-
 model Letter {
   id             String      @id @default(uuid())
   slug           String      @unique
@@ -33,15 +31,12 @@ model Letter {
   firstViewedAt  DateTime?   @map("first_viewed_at")
   replies        Reply[]
   anonymousId    String?     @map("anonymous_id")
-  
 
   @@index([category])
   @@index([visibility])
   @@index([createdAt])
   @@map("letters")
-  
 }
-
 model Reply {
   id             String          @id @default(uuid())
   letterId       String          @map("letter_id")
@@ -54,11 +49,9 @@ model Reply {
   createdAt      DateTime        @default(now()) @map("created_at")
   authorRole     ReplyAuthorRole @map("author_role")
   letter         Letter          @relation(fields: [letterId], references: [id], onDelete: Cascade)
-
   @@index([letterId])
   @@map("replies")
 }
-
 model MagicLink {
   id        String    @id @default(uuid())
   email     String
@@ -66,24 +59,38 @@ model MagicLink {
   expiresAt DateTime  @map("expires_at")
   createdAt DateTime  @default(now()) @map("created_at")
   usedAt    DateTime? @map("used_at")
-
   @@index([token])
   @@map("magic_links")
 }
-
+model Feedback {
+  id          String       @id @default(uuid())
+  type        FeedbackType @default(SUGGESTION)
+  message     String
+  email       String?
+  pageUrl     String?      @map("page_url")
+  userAgent   String?      @map("user_agent")
+  anonymousId String?      @map("anonymous_id")
+  createdAt   DateTime     @default(now()) @map("created_at")
+  @@index([type])
+  @@index([createdAt])
+  @@map("feedback")
+}
 enum Visibility {
   PUBLIC
   UNLISTED
   PRIVATE
 }
-
 enum PublishType {
   PUBLISH_ONLY
   EMAIL_ONLY
   PUBLISH_AND_EMAIL
 }
-
 enum ReplyAuthorRole {
   SENDER
   RECIPIENT
+}
+enum FeedbackType {
+  BUG
+  SUGGESTION
+  OTHER
 }

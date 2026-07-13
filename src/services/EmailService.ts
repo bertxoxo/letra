@@ -1,6 +1,6 @@
-﻿import { mailer } from "@/lib/mailer";
+import { mailer } from "@/lib/mailer";
 
-export type EmailType = "letter_published" | "new_reply" | "magic_link" | "letter_viewed";
+export type EmailType = "letter_published" | "new_reply" | "magic_link" | "letter_viewed" | "feedback_notification";
 
 const FROM = process.env.GMAIL_USER ?? "letra <noreply@letra.app>";
 
@@ -83,6 +83,18 @@ function renderTemplate(type: EmailType, data: Record<string, string>) {
                 View your letter
               </a>
             </div>
+          </div>`,
+      };
+    case "feedback_notification":
+      return {
+        subject: `New feedback: ${data.type}`,
+        html: `
+          <div style="font-family:Inter,Arial,sans-serif;color:#1C1C1C;max-width:480px;margin:auto">
+            <h2 style="margin:0 0 12px;">New feedback received</h2>
+            <p><strong>Type:</strong> ${data.type}</p>
+            <p><strong>Message:</strong> ${data.message}</p>
+            <p><strong>Page:</strong> ${data.pageUrl || "n/a"}</p>
+            <p><strong>Reply-to email:</strong> ${data.email || "not provided"}</p>
           </div>`,
       };
     default:
