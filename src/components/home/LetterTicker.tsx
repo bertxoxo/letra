@@ -21,9 +21,9 @@ interface Props {
 const SPEEDS = [38, 52, 44];
 const DIRECTIONS = ["left", "right", "left"] as const;
 const ROTATIONS = [
-  [-2.5, 1.8, -1.2, 2.1, -0.8, 1.5],
-  [1.2, -2.0, 0.9, -1.7, 2.3, -0.6],
-  [-1.0, 2.2, -1.8, 0.7, -2.4, 1.3],
+  [0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0],
 ];
 
 export function LetterTicker({ letters }: Props) {
@@ -116,11 +116,20 @@ function Card({
         onMouseLeave={() => setHovered(false)}
       >
         <div className="lt-card-fold" />
-        <span className="lt-card-to-pill">To: {card.recipientName}</span>
-        <p className="lt-card-preview">
-          {preview}
-          {card.message.length > 100 ? "\u2026" : ""}
-        </p>
+        <div className="lt-card-corner" />
+
+       <div className="lt-card-body">
+  <div className="lt-card-top-row">
+    <span className="lt-card-to-pill">To: {card.recipientName}</span>
+    {card.category && (
+      <span className="lt-card-tag">{card.category}</span>
+    )}
+  </div>
+          <p className="lt-card-preview">
+            {preview}
+            {card.message.length > 100 ? "\u2026" : ""}
+          </p>
+          </div>
         {card.songName && (
           <div className="lt-song-row">
             {card.albumCover ? (
@@ -128,13 +137,17 @@ function Card({
             ) : (
               <div className="lt-song-cover lt-song-cover--empty" />
             )}
-            <p className="lt-song-name">{card.songName}</p>
+            <div className="lt-song-info">
+              <p className="lt-song-name">{card.songName}</p>
+              {card.artistName && (
+                <p className="lt-song-artist">{card.artistName}</p>
+              )}
+            </div>
+            <svg className="lt-spotify-icon" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z"/>
+            </svg>
           </div>
         )}
-        {card.category && (
-          <span className="lt-card-tag">{card.category}</span>
-        )}
-        <div className="lt-card-corner" />
       </div>
     </Link>
   );
@@ -142,6 +155,7 @@ function Card({
 
 const STYLES = `
   .lt-root {
+  
     width: 100%;
     overflow: hidden;
     display: flex;
@@ -178,7 +192,9 @@ const STYLES = `
     min-height: 170px;
     background: linear-gradient(145deg, #fffef9 0%, #faf7ee 60%, #f2eedf 100%);
     border-radius: 2px;
-    padding: 18px 20px 24px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
     box-shadow: 2px 4px 12px rgba(0,0,0,0.10), 0 1px 3px rgba(0,0,0,0.06), inset 0 1px 0 rgba(255,255,255,0.7);
     transform: rotate(var(--rot));
     transition: transform 0.35s cubic-bezier(0.34, 1.4, 0.64, 1), box-shadow 0.35s ease, filter 0.35s ease;
@@ -214,6 +230,18 @@ const STYLES = `
     border-width: 0 18px 18px 0;
     border-color: transparent rgba(0,0,0,0.06) transparent transparent;
   }
+  .lt-card-body {
+    flex: 1;
+    padding: 18px 20px 14px;
+    display: flex;
+    flex-direction: column;
+  }
+    .lt-card-top-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 8px;
+  }
   .lt-card-to-pill {
     display: inline-block;
     background: rgba(0,0,0,0.06);
@@ -225,6 +253,7 @@ const STYLES = `
     padding: 3px 9px;
     border-radius: 999px;
     margin-bottom: 8px;
+    align-self: flex-start;
   }
   .lt-card-preview {
     font-family: var(--font-hand, cursive);
@@ -235,39 +264,60 @@ const STYLES = `
     -webkit-line-clamp: 3;
     -webkit-box-orient: vertical;
     overflow: hidden;
+    flex: 1;
+  }
+  .lt-card-tag {
+    font-size: 0.6rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #aaa;
+    margin-top: 6px;
   }
   .lt-song-row {
     display: flex;
     align-items: center;
     gap: 8px;
-    margin-top: 10px;
-    padding-top: 10px;
-    border-top: 1px solid rgba(0,0,0,0.08);
+    padding: 9px 12px;
+    background: rgba(0,0,0,0.045);
+    border-top: 1px solid rgba(0,0,0,0.07);
   }
   .lt-song-cover {
-    width: 26px;
-    height: 26px;
-    border-radius: 5px;
+    width: 32px;
+    height: 32px;
+    border-radius: 4px;
     object-fit: cover;
     flex-shrink: 0;
     background: #eee;
   }
   .lt-song-cover--empty { background: #e5e2d8; }
+  .lt-song-info {
+    flex: 1;
+    min-width: 0;
+  }
   .lt-song-name {
     font-family: var(--font-body, system-ui);
     font-size: 0.72rem;
     font-weight: 600;
-    color: #444;
+    color: #333;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+    line-height: 1.3;
   }
-  .lt-card-tag {
-    position: absolute;
-    bottom: 10px; left: 20px;
-    font-size: 0.6rem;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    color: #aaa;
+  .lt-song-artist {
+    font-family: var(--font-body, system-ui);
+    font-size: 0.63rem;
+    color: #888;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    line-height: 1.3;
+    margin-top: 1px;
+  }
+  .lt-spotify-icon {
+    width: 16px;
+    height: 16px;
+    color: #1DB954;
+    flex-shrink: 0;
   }
 `;

@@ -12,6 +12,10 @@ export default async function HomePage() {
       recipientName: true,
       message: true,
       category: true,
+      songName: true,
+      artistName: true,
+      albumCover: true,
+      spotifyUrl: true,
     },
   });
 

@@ -25,7 +25,10 @@ export const metadata: Metadata = {
   title: "letra — every letter tells a story",
   description:
     "Write meaningful digital letters, attach a Spotify song, and share unforgettable moments.",
-};
+  icons: {
+    icon: "/Letra.png",
+  },
+  };
 
 export default function RootLayout({
   children,
