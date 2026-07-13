@@ -19,6 +19,7 @@ export const createLetterSchema = z.object({
   senderName: z.string().max(60).optional(),
   senderEmail: z.string().email(),
   songName: z.string().max(120).optional(),
+  spotifyTrackId: z.string().optional(),
   artistName: z.string().max(120).optional(),
   albumCover: z.string().url().optional(),
   visibility: z.enum(["PUBLIC", "PRIVATE"]).default("PUBLIC"),

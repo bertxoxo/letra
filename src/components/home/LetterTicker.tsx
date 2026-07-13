@@ -1,6 +1,6 @@
-"use client";
+﻿"use client";
 
-import { useRef, useState } from "react";
+import { useState } from "react";
 import Link from "next/link";
 
 interface LetterCard {
@@ -9,6 +9,9 @@ interface LetterCard {
   recipientName: string;
   message: string;
   category?: string | null;
+  songName?: string | null;
+  artistName?: string | null;
+  albumCover?: string | null;
 }
 
 interface Props {
@@ -99,7 +102,7 @@ function Card({
   paused: boolean;
 }) {
   const [hovered, setHovered] = useState(false);
-  const preview = card.message.slice(0, 120).trim();
+  const preview = card.message.slice(0, 100).trim();
 
   return (
     <Link href={`/letter/${card.slug}`}>
@@ -113,11 +116,21 @@ function Card({
         onMouseLeave={() => setHovered(false)}
       >
         <div className="lt-card-fold" />
-        <p className="lt-card-to">To {card.recipientName},</p>
+        <span className="lt-card-to-pill">To: {card.recipientName}</span>
         <p className="lt-card-preview">
           {preview}
-          {card.message.length > 120 ? "\u2026" : ""}
+          {card.message.length > 100 ? "\u2026" : ""}
         </p>
+        {card.songName && (
+          <div className="lt-song-row">
+            {card.albumCover ? (
+              <img src={card.albumCover} alt={card.songName} className="lt-song-cover" />
+            ) : (
+              <div className="lt-song-cover lt-song-cover--empty" />
+            )}
+            <p className="lt-song-name">{card.songName}</p>
+          </div>
+        )}
         {card.category && (
           <span className="lt-card-tag">{card.category}</span>
         )}
@@ -161,11 +174,11 @@ const STYLES = `
   }
   .lt-card {
     position: relative;
-    width: 240px;
-    min-height: 160px;
+    width: 250px;
+    min-height: 170px;
     background: linear-gradient(145deg, #fffef9 0%, #faf7ee 60%, #f2eedf 100%);
     border-radius: 2px;
-    padding: 20px 22px 28px;
+    padding: 18px 20px 24px;
     box-shadow: 2px 4px 12px rgba(0,0,0,0.10), 0 1px 3px rgba(0,0,0,0.06), inset 0 1px 0 rgba(255,255,255,0.7);
     transform: rotate(var(--rot));
     transition: transform 0.35s cubic-bezier(0.34, 1.4, 0.64, 1), box-shadow 0.35s ease, filter 0.35s ease;
@@ -187,7 +200,7 @@ const STYLES = `
   .lt-card--lane-paused { animation-play-state: paused; }
   .lt-card-fold {
     position: absolute;
-    top: 36px;
+    top: 32px;
     left: 6%; right: 6%;
     height: 1px;
     background: linear-gradient(to right, transparent, rgba(0,0,0,0.07) 20%, rgba(0,0,0,0.07) 80%, transparent);
@@ -201,29 +214,58 @@ const STYLES = `
     border-width: 0 18px 18px 0;
     border-color: transparent rgba(0,0,0,0.06) transparent transparent;
   }
-  .lt-card-to {
-    font-family: var(--font-hand, cursive);
-    font-size: 0.78rem;
+  .lt-card-to-pill {
+    display: inline-block;
+    background: rgba(0,0,0,0.06);
     color: #888;
+    font-family: var(--font-body, system-ui);
+    font-size: 0.62rem;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    padding: 3px 9px;
+    border-radius: 999px;
     margin-bottom: 8px;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
   }
   .lt-card-preview {
     font-family: var(--font-hand, cursive);
     font-size: 0.95rem;
-    line-height: 1.7;
+    line-height: 1.65;
     color: #2a2a2a;
     display: -webkit-box;
-    -webkit-line-clamp: 4;
+    -webkit-line-clamp: 3;
     -webkit-box-orient: vertical;
     overflow: hidden;
   }
+  .lt-song-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 10px;
+    padding-top: 10px;
+    border-top: 1px solid rgba(0,0,0,0.08);
+  }
+  .lt-song-cover {
+    width: 26px;
+    height: 26px;
+    border-radius: 5px;
+    object-fit: cover;
+    flex-shrink: 0;
+    background: #eee;
+  }
+  .lt-song-cover--empty { background: #e5e2d8; }
+  .lt-song-name {
+    font-family: var(--font-body, system-ui);
+    font-size: 0.72rem;
+    font-weight: 600;
+    color: #444;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
   .lt-card-tag {
     position: absolute;
-    bottom: 10px; left: 22px;
-    font-size: 0.62rem;
+    bottom: 10px; left: 20px;
+    font-size: 0.6rem;
     letter-spacing: 0.12em;
     text-transform: uppercase;
     color: #aaa;

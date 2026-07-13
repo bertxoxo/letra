@@ -55,13 +55,13 @@ export function SearchBar<T>({
           setOpen(true);
         }}
         onFocus={() => setOpen(true)}
-        onBlur={() => setTimeout(() => setOpen(false), 120)}
+        onBlur={() => setTimeout(() => setOpen(false), 200)}
       />
 
       {open && query.trim() && (
         <div className="absolute z-20 mt-1.5 max-h-72 w-full overflow-y-auto rounded-md border border-hairline bg-white shadow-md">
           {loading && (
-            <p className="px-3.5 py-2.5 text-[13px] text-slate-muted">Searching…</p>
+            <p className="px-3.5 py-2.5 text-[13px] text-slate-muted">SearchingÃ¢â‚¬Â¦</p>
           )}
           {!loading && results.length === 0 && (
             <p className="px-3.5 py-2.5 text-[13px] text-slate-muted">{emptyLabel}</p>

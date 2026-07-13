@@ -60,6 +60,7 @@ export default function CreateLetterPage() {
   songName: track?.name,
   artistName: track?.artist,
   albumCover: track?.albumCover,
+  spotifyTrackId: track?.id,
   publishType: recipientEmail ? "PUBLISH_AND_EMAIL" : "PUBLISH_ONLY",
 };;
 
@@ -113,7 +114,7 @@ export default function CreateLetterPage() {
           <Input
             id="recipientEmail"
             type="email"
-            placeholder="So we can notify them — leave blank to just share the link yourself"
+            placeholder="So we can notify them â€” leave blank to just share the link yourself"
             value={recipientEmail}
             onChange={(e) => setRecipientEmail(e.target.value)}
           />
@@ -167,9 +168,13 @@ export default function CreateLetterPage() {
             <div>
               <p className="text-sm font-medium text-ink">Attach a song</p>
               {track ? (
-                <p className="text-xs text-muted">
-                  {track.name} — {track.artist}
-                </p>
+                <div className="mt-2 flex items-center gap-2.5">
+                  <img src={track.albumCover} alt={track.name} className="h-9 w-9 rounded" />
+                  <div className="min-w-0">
+                    <p className="truncate text-xs font-medium text-ink">{track.name}</p>
+                    <p className="truncate text-xs text-muted">{track.artist}</p>
+                  </div>
+                </div>
               ) : (
                 <p className="text-xs text-muted">
                   Search Spotify and attach the track with your letter.

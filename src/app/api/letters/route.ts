@@ -1,4 +1,4 @@
-﻿import { NextRequest, NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { slugify } from "@/lib/slug";
 import { createLetterSchema } from "@/lib/validators";
@@ -81,6 +81,10 @@ export async function POST(req: NextRequest) {
         visibility: data.visibility ?? "PUBLIC",
         publishType: data.publishType ?? "PUBLISH_ONLY",
         anonymousId,
+        songName: data.songName ?? null,
+        artistName: data.artistName ?? null,
+        albumCover: data.albumCover ?? null,
+        spotifyTrackId: data.spotifyTrackId ?? null,
       },
     });
 
@@ -90,13 +94,16 @@ export async function POST(req: NextRequest) {
         const result = await EmailService.send("letter_published", letter.recipientEmail, {
           recipientName: letter.recipientName,
           url,
+          ...(letter.songName ? { songName: letter.songName } : {}),
+          ...(letter.artistName ? { artistName: letter.artistName } : {}),
+          ...(letter.albumCover ? { albumCover: letter.albumCover } : {}),
         });
         console.log("Email send result:", result);
       } catch (err) {
         console.error("Failed to send publish email:", err);
       }
     } else {
-      console.log("Email not sent — publishType:", letter.publishType, "recipientEmail:", letter.recipientEmail);
+      console.log("Email not sent Ã¢â‚¬â€ publishType:", letter.publishType, "recipientEmail:", letter.recipientEmail);
     }
 
     const response = NextResponse.json({ letter }, { status: 201 });
